@@ -1,0 +1,115 @@
+namespace com.example.models
+package com.example.api
+
+import com.example.time.Date
+
+/**
+ * Foo
+ */
+typeref Time = long
+
+// Bar
+fixed MD5 16
+
+/**
+ * A record representing an user in the system.
+ */
+record User1 includes SuperUser, HyperUser {
+  /** First name of the user */
+  @validate.regex.regex = "^[a-zA-Z]+$"
+  @hasPii = true
+  firstName: string = "Ben"
+
+  /** User's birth day */
+  birthday: optional Date
+
+  // TODO: Can this be an enum?
+  /** Status of the user. */
+  isActive: boolean = true
+
+	// Enum with default
+	suspendedReason: enum StatusReason {
+    @deprecated = "Use INACTIVE for users pending deletion."
+    DELETED
+    INACTIVE
+    FLAGGED_BY_SPAM_CHECK
+    REPORTED_BY_ADMIN
+  } = "FLAGGED_BY_SPAM_CHECK"
+
+  // Primitive types with default values
+  intWithDefault: int = 1
+  longWithDefault: long = 3000000000
+  floatWithDefault: float = 3.3
+  doubleWithDefault: double = 4.4E38
+  booleanWithDefault: boolean = true
+  stringWithDefault: string = "DEFAULT"
+  bytesWithDefault: bytes = "\u0007"
+
+  // Primitive arrays with default values:
+  ints: array[int] = [1, 2, 3]
+  longs: array[long] = [3000000000, 4000000000]
+  floats: array[float] = [3.3, 2.5]
+  doubles: array[double] = [4.4E38, 3.1E24]
+  booleans: array[boolean] = [true, false]
+  strings: array[string] = ["hello"]
+  bytes: array[bytes] = ["\u0007"]
+
+  // Record or Enum arrays with default values:
+  users: array[User] = [{ "firstName": "Joker" }, { "firstName": "\"Darth\""}]
+  reasons: array[SuspendReason] = ["FLAGGED_BY_SPAM_CHECK"]
+
+  // Primitive maps with default values:
+  ints: map[string, int] = { "int1": 1, "int2": 2, "int3": 3 }
+  longs: map[string, long] = { "long1": 3000000000, "long2": 4000000000 }
+  floats: map[string, float] = { "float1": 3.3, "float2": 2.1 }
+  doubles: map[string, double] = {"double1": 4.4E38, "double2": 3.1E24}
+  booleans: map[string, boolean] = { "boolean1": true, "boolean2": true, "boolean3": false }
+  strings: map[string, string] = { "string1": "hello", "string2": "world" }
+  bytes: map[string, bytes] = { "bytes": "\u0007" }
+
+  // Maps with complex values:
+  countByFirstNameAndStatus: map[string, map[string, int]]
+
+  /**
+   * Union with default value:
+   */
+  owner: union[User, UserGroup] = { "com.example.models.User": { "firstName": "CATS" }}
+    statusReason: union [
+      enum ActiveReason {
+        NEVER_SUSPENDED
+        SUSPENSION_CLEARED
+      }
+      enum SuspendReason {
+        FLAGGED_BY_SPAM_CHECK
+        REPORTED_BY_ADMIN
+      }
+      enum InactiveReason {
+        USER_REQUESTED_DELETION
+        REQUESTED_BY_ADMIN
+      }
+    ] = { "com.example.models.ActiveReason": "NEVER_SUSPENDED" }
+
+  /**
+   * A record with user's contact information.
+   */
+  contacts: record Contacts {
+    /** Primary phone number for the user */
+    primaryPhoneNumber: union[
+      /** A mobile phone number */
+      mobile: PhoneNumber,
+
+      /**
+       * A work phone number
+       */
+      work: PhoneNumber,
+
+      /** A home phone number */
+      home: PhoneNumber
+    ]
+  }
+  `namespace`: string
+
+  @`namespace` = "foo.bar"
+  @validate.`com.linkedin.CustomValidator` = "foo"
+  firstName: string
+}
