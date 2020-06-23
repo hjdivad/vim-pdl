@@ -26,7 +26,7 @@ highlight link pdlLineComment Comment
 syntax region  pdlMultilineComment start='\v\/\*' end='\v\*\/' fold
 highlight link pdlMultilineComment Comment
 
-syntax match pdlIdentifier '\v[a-zA-Z][a-zA-Z0-9]*'
+syntax match pdlIdentifier '\v[a-zA-Z_][a-zA-Z0-9_]*'
 highlight link pdlIdentifier Identifier
 
 syntax region pdlString start='\v"' skip='\v\\.' end='\v"'
@@ -38,7 +38,7 @@ highlight link pdlInt Number
 syntax match pdlFloat '\v[0-9]+\.[0-9]+'
 highlight link pdlFloat Float
 
-syntax match pdlEFloat '\v[0-9]+\.[0-9]+E[0-9]+'
+syntax match pdlEFloat '\v[0-9]+\.[0-9]+[Ee][0-9]+'
 syntax match pdlEFloat '\v[0-9]+[Ee][0-9]+'
 highlight link pdlEFloat Float
 
