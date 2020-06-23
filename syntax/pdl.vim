@@ -4,49 +4,49 @@ endif
 
 " https://linkedin.github.io/rest.li/pdl_schema
 
-
 " Maybe syntax sync match would be faster for large files
 syntax sync fromstart
 
-syntax keyword pdlTopLevelKeyword namespace import package
-highlight link pdlTopLevelKeyword Keyword
+syntax match pdlEscapedKeyword '\v`.*`'
+highlight link pdlEscapedKeyword Identifier
 
-" TODO: typeref declaration
-" TODO: fixed declaration
+syntax keyword pdlKeyword namespace import package includes typeref fixed
+syntax keyword pdlKeyword optional
+highlight link pdlKeyword Keyword
 
-" Record Declarations {{{
-" TODO: includes A,B
-" TODO: properties
-syntax region pdlRecordDeclaration start='\v<record>' end='\v\}' contains=pdlRecordKeyword,pdlRecordIdentifier,pdlFieldSelection skipwhite skipnl skipempty keepend
+syntax keyword pdlStructure enum record
+highlight link pdlStructure Structure
 
-syntax keyword pdlRecordKeyword contained record
-highlight link pdlRecordKeyword Keyword
-syntax match pdlRecordIdentifier contained /\v<\K\k*>/
-highlight link pdlRecordIdentifier Type
-
-" TODO: skip commas at end of line?
-" TODO: annotations
-syntax region pdlFieldSelection contained start='\v\{' end='\v\}' contains=pdlFieldDeclaration skipwhite skipnl skipempty
-" TODO: defaults (x: int = 1)
-" TODO: enums
-" TODO: aliased unions
-" TODO: properties
-syntax region pdlFieldDeclaration contained start='\v<\K\k*>:' end='\v[\r\n]' contains=pdlFieldName,pdlFieldTypeKeyword skipwhite skipempty
-
-" TODO: escaped field name eg `record`:
-syntax match pdlFieldName contained /\v<\K\k*>(:)@=/
-highlight link pdlFieldName Identifier
-
-syntax keyword pdlFieldTypeKeyword contained array map union
-highlight link pdlFieldTypeKeyword Keyword
-
-" }}}
+syntax keyword pdlType map array union
+syntax keyword pdlType string boolean float double bytes int long
+highlight link pdlType Type
 
 syntax match pdlLineComment '\v\/\/.*$'
 highlight link pdlLineComment Comment
-syntax region  pdlMultilineComment start='/\v\*'  end='\v\*/'  fold
+syntax region  pdlMultilineComment start='\v\/\*' end='\v\*\/' fold
 highlight link pdlMultilineComment Comment
 
+syntax match pdlIdentifier '\v[a-zA-Z_][a-zA-Z0-9_]*'
+highlight link pdlIdentifier Identifier
+
+syntax region pdlString start='\v"' skip='\v\\.' end='\v"'
+highlight link pdlString String
+
+syntax match pdlInt '\v[0-9]+'
+highlight link pdlInt Number
+
+syntax match pdlFloat '\v[0-9]+\.[0-9]+'
+highlight link pdlFloat Float
+
+syntax match pdlEFloat '\v[0-9]+\.[0-9]+[Ee][0-9]+'
+syntax match pdlEFloat '\v[0-9]+[Ee][0-9]+'
+highlight link pdlEFloat Float
+
+syntax keyword pdlBool true false
+highlight link pdlBool Boolean
+
+syntax match pdlProperty '\v\@\S+'
+highlight link pdlProperty Identifier
 
 let b:current_syntax = 'pdl'
 
